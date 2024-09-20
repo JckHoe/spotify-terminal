@@ -8,17 +8,31 @@ import (
 )
 
 type model struct {
-	message string
+	items    []string
+	cursor   int
+	selected string
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return tea.ClearScreen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		if msg.String() == "q" || msg.String() == "ctrl+c" {
+		switch msg.String() {
+		case "j", tea.KeyDown.String():
+			if m.cursor < len(m.items)-1 {
+				m.cursor++
+			}
+		case "k", tea.KeyUp.String():
+			if m.cursor > 0 {
+				m.cursor--
+			}
+		case "enter":
+			m.selected = m.items[m.cursor]
+			return m, tea.ClearScreen
+		case "q", "ctrl+c":
 			return m, tea.Quit
 		}
 	}
@@ -26,14 +40,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	return fmt.Sprintf("%s\n\nPress 'q' to quit.\n", m.message)
+	s := "Select an item:\n\n"
+	s += fmt.Sprintf("You selected: %s\n", m.selected)
+	for i, item := range m.items {
+		if i == m.cursor {
+			s += fmt.Sprintf("> %s\n", item)
+		} else {
+			s += fmt.Sprintf("  %s\n", item)
+		}
+	}
+	return s
 }
 
 func main() {
-	p := tea.NewProgram(model{message: "Hello, Bubble Tea!"})
+	items := []string{"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"}
+	p := tea.NewProgram(model{items: items})
 
-	if err := p.Start(); err != nil {
+	finalModel, err := p.Run()
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error running application: %v\n", err)
 		os.Exit(1)
+	}
+
+	finalModelState, ok := finalModel.(model)
+	if ok && finalModelState.selected != "" {
+		fmt.Printf("Final selected: %s\n", finalModelState.selected)
 	}
 }
