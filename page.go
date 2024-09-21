@@ -13,7 +13,7 @@ type page struct {
 	selected string
 }
 
-func handleKeyMsg(current *page, keyMsg string) tea.Cmd {
+func (current *page) handleKeyMsg(keyMsg string) tea.Cmd {
 	switch keyMsg {
 	case "j", tea.KeyDown.String():
 		if current.cursor < len(current.items)-1 {
@@ -34,7 +34,7 @@ func handleKeyMsg(current *page, keyMsg string) tea.Cmd {
 	return nil
 }
 
-func getView(current *page) string {
+func (current *page) getView() string {
 	s := "Select an item:\n\n"
 	s += fmt.Sprintf("You selected: %s\n", current.selected)
 	for i, item := range current.items {

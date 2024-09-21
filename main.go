@@ -37,13 +37,13 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		return m, handleKeyMsg(&m.currentPage, msg.String())
+		return m, m.currentPage.handleKeyMsg(msg.String())
 	}
 	return m, nil
 }
 
 func (m model) View() string {
-	return getView(&m.currentPage)
+	return m.currentPage.getView()
 }
 
 func main() {
