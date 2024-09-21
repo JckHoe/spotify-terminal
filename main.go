@@ -9,7 +9,7 @@ import (
 )
 
 type model struct {
-	currentPage page
+	currentPage *page
 }
 
 func init() {
@@ -37,7 +37,10 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		cmd, _ := m.currentPage.handleKeyMsg(msg.String())
+		cmd, nextPage := m.currentPage.handleKeyMsg(msg.String())
+		if nextPage != nil {
+			m.currentPage = nextPage
+		}
 		return m, cmd
 	}
 	return m, nil
@@ -61,7 +64,7 @@ func main() {
 			},
 		},
 	}
-	p := tea.NewProgram(model{currentPage: startupPage})
+	p := tea.NewProgram(model{currentPage: &startupPage})
 
 	_, err := p.Run()
 	if err != nil {

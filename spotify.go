@@ -24,7 +24,7 @@ func startup() {
 	// getPlayerStatus()
 }
 
-func getDevicesIds() []Device {
+func getDevices() []Device {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player/devices", nil)
 	if err != nil {
 		log.Fatalln(err)

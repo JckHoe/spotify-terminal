@@ -17,6 +17,7 @@ type page struct {
 type item struct {
 	displayName string
 	ID          string
+	active      bool
 }
 
 func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
@@ -30,9 +31,21 @@ func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
 			current.cursor--
 		}
 	case "enter":
-		if current.selected != current.items[current.cursor] {
+		if current.items[current.cursor].ID == "device" {
 			current.selected = current.items[current.cursor]
-			return tea.ClearScreen, nil
+			devices := getDevices()
+			var pageItems []item
+			for _, device := range devices {
+				pageItems = append(pageItems, item{
+					displayName: device.Name,
+					ID:          device.ID,
+					active:      device.Active,
+				})
+			}
+			return tea.ClearScreen, &page{
+				name:  "Devices",
+				items: pageItems,
+			}
 		}
 	case "q", "ctrl+c":
 		return tea.Quit, nil
