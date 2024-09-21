@@ -58,12 +58,17 @@ func (current *page) getView() string {
 	s += "Select an option:\n\n"
 	for i, item := range current.items {
 		if i == current.cursor {
-			s += fmt.Sprintf("> %s\n", item.displayName)
+			s += fmt.Sprintf("> %s\n", getItemDisplay(item))
 		} else {
-			s += fmt.Sprintf("  %s\n", item.displayName)
+			s += fmt.Sprintf("  %s\n", getItemDisplay(item))
 		}
 	}
-	s += fmt.Sprintf("You selected: %s\n", current.selected.displayName)
 	return s
+}
 
+func getItemDisplay(input item) string {
+	if input.active {
+		return fmt.Sprintf("%s (Active)", input.displayName)
+	}
+	return fmt.Sprintf("%s", input.displayName)
 }
