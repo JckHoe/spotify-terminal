@@ -37,7 +37,8 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		return m, m.currentPage.handleKeyMsg(msg.String())
+		cmd, _ := m.currentPage.handleKeyMsg(msg.String())
+		return m, cmd
 	}
 	return m, nil
 }
@@ -52,6 +53,7 @@ func main() {
 		items: []item{
 			item{
 				displayName: "Select Device",
+				ID:          "device",
 			},
 			item{
 				displayName: "Others (To be supported)",

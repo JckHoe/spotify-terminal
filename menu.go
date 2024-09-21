@@ -19,7 +19,7 @@ type item struct {
 	ID          string
 }
 
-func (current *page) handleKeyMsg(keyMsg string) tea.Cmd {
+func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
 	switch keyMsg {
 	case "j", tea.KeyDown.String():
 		if current.cursor < len(current.items)-1 {
@@ -32,12 +32,12 @@ func (current *page) handleKeyMsg(keyMsg string) tea.Cmd {
 	case "enter":
 		if current.selected != current.items[current.cursor] {
 			current.selected = current.items[current.cursor]
-			return tea.ClearScreen
+			return tea.ClearScreen, nil
 		}
 	case "q", "ctrl+c":
-		return tea.Quit
+		return tea.Quit, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func (current *page) getView() string {
