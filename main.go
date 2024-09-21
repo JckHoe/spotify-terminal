@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,6 +15,18 @@ type model struct {
 }
 
 func (m model) Init() tea.Cmd {
+	spotifyKey = os.Getenv("SPOTIFY_KEY")
+	if spotifyKey == "" {
+		log.Fatal("SPOTIFY_KEY variable is not set")
+	}
+
+	refreshToken = os.Getenv("SPOTIFY_REFRESH_TOKEN")
+	if refreshToken == "" {
+		log.Fatal("SPOTIFY_REFRESH_TOKEN variable is not set")
+	}
+
+	go refreshAccessToken()
+
 	return tea.ClearScreen
 }
 
