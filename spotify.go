@@ -21,7 +21,7 @@ type Device struct {
 func startup() {
 	refreshAccessToken()
 	getDevicesIds()
-	getPlayerStatus()
+	// getPlayerStatus()
 }
 
 func getDevicesIds() []Device {
