@@ -49,7 +49,6 @@ func refreshAccessToken() {
 
 	var authResp AuthResponse
 	err = json.Unmarshal(body, &authResp)
-	log.Printf("Content: %s", authResp.AccessToken)
-
+	// Set The access token
 	accessToken = authResp.AccessToken
 }

@@ -14,7 +14,7 @@ type model struct {
 	selected string
 }
 
-func (m model) Init() tea.Cmd {
+func init() {
 	spotifyKey = os.Getenv("SPOTIFY_KEY")
 	if spotifyKey == "" {
 		log.Fatal("SPOTIFY_KEY variable is not set")
@@ -29,9 +29,10 @@ func (m model) Init() tea.Cmd {
 	if clientId == "" {
 		log.Fatal("SPOTIFY_CLIENT_ID variable is not set")
 	}
+	go startup()
+}
 
-	go refreshAccessToken()
-
+func (m model) Init() tea.Cmd {
 	return tea.ClearScreen
 }
 
