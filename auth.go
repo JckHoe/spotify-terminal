@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -12,13 +13,18 @@ import (
 // auth vars
 var spotifyKey string
 var refreshToken string
+var clientId string
 var accessToken string
+
+type AuthResponse struct {
+	AccessToken string `json:"access_token"`
+}
 
 func refreshAccessToken() {
 	formData := url.Values{}
-	formData.Set("code", refreshToken)
-	formData.Set("redirect_uri", "http://localhost:8888/callback")
-	formData.Set("grant_type", "authorization_code")
+	formData.Set("refresh_token", refreshToken)
+	formData.Set("client_id", clientId)
+	formData.Set("grant_type", "refresh_token")
 
 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(formData.Encode()))
 	if err != nil {
@@ -41,6 +47,9 @@ func refreshAccessToken() {
 		log.Fatalln(err)
 	}
 
-	log.Printf("Status : %s", resp.Status)
-	log.Printf("Content: %s", string(body))
+	var authResp AuthResponse
+	err = json.Unmarshal(body, &authResp)
+	log.Printf("Content: %s", authResp.AccessToken)
+
+	accessToken = authResp.AccessToken
 }

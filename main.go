@@ -25,6 +25,11 @@ func (m model) Init() tea.Cmd {
 		log.Fatal("SPOTIFY_REFRESH_TOKEN variable is not set")
 	}
 
+	clientId = os.Getenv("SPOTIFY_CLIENT_ID")
+	if clientId == "" {
+		log.Fatal("SPOTIFY_CLIENT_ID variable is not set")
+	}
+
 	go refreshAccessToken()
 
 	return tea.ClearScreen
