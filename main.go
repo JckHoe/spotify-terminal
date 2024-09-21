@@ -48,7 +48,15 @@ func (m model) View() string {
 
 func main() {
 	startupPage := page{
-		items: []string{"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"},
+		name: "Main Menu",
+		items: []item{
+			item{
+				displayName: "Select Device",
+			},
+			item{
+				displayName: "Others (To be supported)",
+			},
+		},
 	}
 	p := tea.NewProgram(model{currentPage: startupPage})
 

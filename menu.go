@@ -8,9 +8,15 @@ import (
 type page struct {
 	name string
 
-	items    []string
+	isInit   bool
+	items    []item
 	cursor   int
-	selected string
+	selected item
+}
+
+type item struct {
+	displayName string
+	ID          string
 }
 
 func (current *page) handleKeyMsg(keyMsg string) tea.Cmd {
@@ -35,15 +41,16 @@ func (current *page) handleKeyMsg(keyMsg string) tea.Cmd {
 }
 
 func (current *page) getView() string {
-	s := "Select an item:\n\n"
-	s += fmt.Sprintf("You selected: %s\n", current.selected)
+	s := fmt.Sprintf("*** %s ***\n", current.name)
+	s += "Select an option:\n\n"
 	for i, item := range current.items {
 		if i == current.cursor {
-			s += fmt.Sprintf("> %s\n", item)
+			s += fmt.Sprintf("> %s\n", item.displayName)
 		} else {
-			s += fmt.Sprintf("  %s\n", item)
+			s += fmt.Sprintf("  %s\n", item.displayName)
 		}
 	}
+	s += fmt.Sprintf("You selected: %s\n", current.selected.displayName)
 	return s
 
 }
