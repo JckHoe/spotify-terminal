@@ -19,6 +19,4 @@ func writeToLogFile(filePath, log string) {
 		fmt.Println("Error writing to file:", err)
 		return
 	}
-
-	fmt.Println("Data written to file successfully!")
 }
