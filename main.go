@@ -12,6 +12,8 @@ type model struct {
 	currentPage *page
 }
 
+var startupPage page
+
 func init() {
 	spotifyKey = os.Getenv("SPOTIFY_KEY")
 	if spotifyKey == "" {
@@ -51,7 +53,7 @@ func (m model) View() string {
 }
 
 func main() {
-	startupPage := page{
+	startupPage = page{
 		name: "Main Menu",
 		items: []item{
 			{

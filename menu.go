@@ -42,10 +42,19 @@ func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
 					active:      device.Active,
 				})
 			}
+
+			// Add return choice
+			pageItems = append(pageItems, item{
+				displayName: "Back to Menu",
+				ID:          "main",
+			})
+
 			return tea.ClearScreen, &page{
 				name:  "Devices",
 				items: pageItems,
 			}
+		} else if current.items[current.cursor].ID == "main" {
+			return tea.ClearScreen, &startupPage
 		}
 	case "q", "ctrl+c":
 		return tea.Quit, nil
