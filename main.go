@@ -51,12 +51,13 @@ func main() {
 	startupPage := page{
 		name: "Main Menu",
 		items: []item{
-			item{
+			{
 				displayName: "Select Device",
 				ID:          "device",
 			},
-			item{
+			{
 				displayName: "Others (To be supported)",
+				ID:          "nothing",
 			},
 		},
 	}
