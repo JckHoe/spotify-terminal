@@ -5,6 +5,18 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// colors
+const (
+	Reset  = "\033[0m"
+	Red    = "\033[31m"
+	Green  = "\033[32m"
+	Yellow = "\033[33m"
+	Blue   = "\033[34m"
+	Purple = "\033[35m"
+	Cyan   = "\033[36m"
+	White  = "\033[37m"
+)
+
 type page struct {
 	name string
 
@@ -63,13 +75,13 @@ func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
 }
 
 func (current *page) getView() string {
-	s := fmt.Sprintf("*** %s ***\n", current.name)
-	s += "Select an option:\n\n"
+	s := fmt.Sprintf("%s\t\t\t%s\n\n", Red, current.name)
+	s += fmt.Sprintf("%s%s\n\n", Blue, "Select an option:")
 	for i, item := range current.items {
 		if i == current.cursor {
-			s += fmt.Sprintf("> %s\n", getItemDisplay(item))
+			s += fmt.Sprintf("%s> %s\n", Green, getItemDisplay(item))
 		} else {
-			s += fmt.Sprintf("  %s\n", getItemDisplay(item))
+			s += fmt.Sprintf("%s  %s\n", Yellow, getItemDisplay(item))
 		}
 	}
 	return s
