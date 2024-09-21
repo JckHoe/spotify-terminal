@@ -68,7 +68,7 @@ func (current *page) handleKeyMsg(keyMsg string) (tea.Cmd, *page) {
 		} else if current.items[current.cursor].ID == "main" {
 			return tea.ClearScreen, &startupPage
 		}
-	case "q", "ctrl+c":
+	case "q":
 		return tea.Quit, nil
 	}
 	return nil, nil
