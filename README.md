@@ -1,1 +1,3 @@
-# terminal-go
+# Spotify Terminal
+
+Simple interaction with spotify via TUI
