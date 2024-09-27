@@ -54,6 +54,9 @@ func (current *Page) HandleKeyMsg(keyMsg string) (tea.Cmd, *Page) {
 			}
 		} else if current.Items[current.Cursor].ID == "main" {
 			return tea.ClearScreen, &StartupPage
+		} else if current.Items[current.Cursor].ID == "nothing" {
+			// TODO this is just to debug this API
+			spotify.GetPlayerStatus()
 		}
 	case "q":
 		return tea.Quit, nil

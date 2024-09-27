@@ -51,7 +51,7 @@ func GetDevices() []Device {
 	return response.Devices
 }
 
-func getPlayerStatus() {
+func GetPlayerStatus() {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player", nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -66,8 +66,10 @@ func getPlayerStatus() {
 		log.Fatalln(err)
 	}
 
-	_, err = io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	log.Printf("\n%s\n", string(body))
 }

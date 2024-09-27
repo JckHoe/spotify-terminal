@@ -30,7 +30,7 @@ func init() {
 	if spotify.ClientId == "" {
 		log.Fatal("SPOTIFY_CLIENT_ID variable is not set")
 	}
-	go spotify.Startup()
+	spotify.Startup()
 }
 
 func (m model) Init() tea.Cmd {
