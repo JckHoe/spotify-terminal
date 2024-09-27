@@ -1,4 +1,4 @@
-module terminal-go
+module spotify-terminal
 
 go 1.22.3
 

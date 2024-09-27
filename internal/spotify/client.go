@@ -1,4 +1,4 @@
-package main
+package spotify
 
 import (
 	"encoding/json"
@@ -18,19 +18,17 @@ type Device struct {
 	Name   string `json:"name"`
 }
 
-func startup() {
+func Startup() {
 	refreshAccessToken()
-	// getDevicesIds()
-	// getPlayerStatus()
 }
 
-func getDevices() []Device {
+func GetDevices() []Device {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player/devices", nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
 
 	client := &http.Client{}
 
@@ -59,7 +57,7 @@ func getPlayerStatus() {
 		log.Fatalln(err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
 
 	client := &http.Client{}
 
@@ -68,10 +66,8 @@ func getPlayerStatus() {
 		log.Fatalln(err)
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	writeToLogFile("log.json", string(body))
 }

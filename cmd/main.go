@@ -6,30 +6,31 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+	// TODO refactor remove this main just invoke internal keep minimal in cmd
+	lib "spotify-terminal/internal"
+	spotify "spotify-terminal/internal/spotify"
 )
 
 type model struct {
-	currentPage *page
+	currentPage *lib.Page
 }
 
-var startupPage page
-
 func init() {
-	spotifyKey = os.Getenv("SPOTIFY_KEY")
-	if spotifyKey == "" {
+	spotify.SpotifyKey = os.Getenv("SPOTIFY_KEY")
+	if spotify.SpotifyKey == "" {
 		log.Fatal("SPOTIFY_KEY variable is not set")
 	}
 
-	refreshToken = os.Getenv("SPOTIFY_REFRESH_TOKEN")
-	if refreshToken == "" {
+	spotify.RefreshToken = os.Getenv("SPOTIFY_REFRESH_TOKEN")
+	if spotify.RefreshToken == "" {
 		log.Fatal("SPOTIFY_REFRESH_TOKEN variable is not set")
 	}
 
-	clientId = os.Getenv("SPOTIFY_CLIENT_ID")
-	if clientId == "" {
+	spotify.ClientId = os.Getenv("SPOTIFY_CLIENT_ID")
+	if spotify.ClientId == "" {
 		log.Fatal("SPOTIFY_CLIENT_ID variable is not set")
 	}
-	go startup()
+	go spotify.Startup()
 }
 
 func (m model) Init() tea.Cmd {
@@ -39,7 +40,7 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		cmd, nextPage := m.currentPage.handleKeyMsg(msg.String())
+		cmd, nextPage := m.currentPage.HandleKeyMsg(msg.String())
 		if nextPage != nil {
 			m.currentPage = nextPage
 		}
@@ -49,24 +50,25 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	return m.currentPage.getView()
+	return m.currentPage.GetView()
 }
 
 func main() {
-	startupPage = page{
-		name: "Main Menu",
-		items: []item{
+	// TODO refactor this
+	lib.StartupPage = lib.Page{
+		Name: "Main Menu",
+		Items: []lib.Item{
 			{
-				displayName: "Select Device",
+				DisplayName: "Select Device",
 				ID:          "device",
 			},
 			{
-				displayName: "Others (To be supported)",
+				DisplayName: "Others (To be supported)",
 				ID:          "nothing",
 			},
 		},
 	}
-	p := tea.NewProgram(model{currentPage: &startupPage})
+	p := tea.NewProgram(model{currentPage: &lib.StartupPage})
 
 	_, err := p.Run()
 	if err != nil {

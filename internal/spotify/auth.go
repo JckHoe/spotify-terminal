@@ -1,4 +1,4 @@
-package main
+package spotify
 
 import (
 	"bytes"
@@ -10,11 +10,10 @@ import (
 	"net/url"
 )
 
-// auth vars
-var spotifyKey string
-var refreshToken string
-var clientId string
-var accessToken string
+var SpotifyKey string
+var RefreshToken string
+var ClientId string
+var AccessToken string
 
 type AuthResponse struct {
 	AccessToken string `json:"access_token"`
@@ -22,8 +21,8 @@ type AuthResponse struct {
 
 func refreshAccessToken() {
 	formData := url.Values{}
-	formData.Set("refresh_token", refreshToken)
-	formData.Set("client_id", clientId)
+	formData.Set("refresh_token", RefreshToken)
+	formData.Set("client_id", ClientId)
 	formData.Set("grant_type", "refresh_token")
 
 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(formData.Encode()))
@@ -32,7 +31,7 @@ func refreshAccessToken() {
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", spotifyKey))
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", SpotifyKey))
 
 	client := &http.Client{}
 
@@ -50,5 +49,5 @@ func refreshAccessToken() {
 	var authResp AuthResponse
 	err = json.Unmarshal(body, &authResp)
 	// Set The access token
-	accessToken = authResp.AccessToken
+	AccessToken = authResp.AccessToken
 }
