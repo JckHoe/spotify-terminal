@@ -24,10 +24,41 @@ func NewInitPage() Page {
 			{
 				DisplayName: "Select Device",
 				ID:          "device",
+				OnEnter: func() (tea.Cmd, *Page) {
+					devices := spotify.GetDevices()
+					var pageItems []Item
+					for _, device := range devices {
+						pageItems = append(pageItems, Item{
+							DisplayName: device.Name,
+							ID:          device.ID,
+							Active:      device.Active,
+						})
+					}
+
+					// Add return choice
+					pageItems = append(pageItems, Item{
+						DisplayName: "Back to Menu",
+						ID:          "main",
+						OnEnter: func() (tea.Cmd, *Page) {
+							initPage := NewInitPage()
+							return tea.ClearScreen, &initPage
+						},
+					})
+
+					return tea.ClearScreen, &Page{
+						Name:  "Devices",
+						Items: pageItems,
+					}
+				},
 			},
 			{
 				DisplayName: "Others (To be supported)",
 				ID:          "nothing",
+				OnEnter: func() (tea.Cmd, *Page) {
+					// TODO this is just to debug this API
+					spotify.GetPlayerStatus()
+					return nil, nil
+				},
 			},
 		},
 	}
@@ -44,35 +75,7 @@ func (current *Page) HandleKeyMsg(keyMsg string) (tea.Cmd, *Page) {
 			current.Cursor--
 		}
 	case "enter":
-		if current.Items[current.Cursor].ID == "device" {
-			current.Selected = current.Items[current.Cursor]
-			devices := spotify.GetDevices()
-			var pageItems []Item
-			for _, device := range devices {
-				pageItems = append(pageItems, Item{
-					DisplayName: device.Name,
-					ID:          device.ID,
-					Active:      device.Active,
-				})
-			}
-
-			// Add return choice
-			pageItems = append(pageItems, Item{
-				DisplayName: "Back to Menu",
-				ID:          "main",
-			})
-
-			return tea.ClearScreen, &Page{
-				Name:  "Devices",
-				Items: pageItems,
-			}
-		} else if current.Items[current.Cursor].ID == "main" {
-			initPage := NewInitPage()
-			return tea.ClearScreen, &initPage
-		} else if current.Items[current.Cursor].ID == "nothing" {
-			// TODO this is just to debug this API
-			spotify.GetPlayerStatus()
-		}
+		return current.Items[current.Cursor].OnEnter()
 	case "q":
 		return tea.Quit, nil
 	}
