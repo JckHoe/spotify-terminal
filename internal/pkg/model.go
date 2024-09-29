@@ -1,4 +1,8 @@
-package internal
+package pkg
+
+import (
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type Page struct {
 	Name string
@@ -7,6 +11,8 @@ type Page struct {
 	Items    []Item
 	Cursor   int
 	Selected Item
+
+	OnEnter func() (tea.Cmd, *Page)
 }
 
 type Item struct {

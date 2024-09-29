@@ -7,7 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	// TODO refactor remove this main just invoke internal keep minimal in cmd
-	lib "spotify-terminal/internal"
+	lib "spotify-terminal/internal/pkg"
 	spotify "spotify-terminal/internal/spotify"
 )
 
@@ -21,6 +21,7 @@ func init() {
 		log.Fatal("SPOTIFY_KEY variable is not set")
 	}
 
+	// TODO handle it to not require
 	spotify.RefreshToken = os.Getenv("SPOTIFY_REFRESH_TOKEN")
 	if spotify.RefreshToken == "" {
 		log.Fatal("SPOTIFY_REFRESH_TOKEN variable is not set")
@@ -54,21 +55,8 @@ func (m model) View() string {
 }
 
 func main() {
-	// TODO refactor this
-	lib.StartupPage = lib.Page{
-		Name: "Main Menu",
-		Items: []lib.Item{
-			{
-				DisplayName: "Select Device",
-				ID:          "device",
-			},
-			{
-				DisplayName: "Others (To be supported)",
-				ID:          "nothing",
-			},
-		},
-	}
-	p := tea.NewProgram(model{currentPage: &lib.StartupPage})
+	initPage := lib.NewInitPage()
+	p := tea.NewProgram(model{currentPage: &initPage})
 
 	_, err := p.Run()
 	if err != nil {

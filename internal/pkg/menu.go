@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 import (
 	"fmt"
@@ -17,7 +17,21 @@ const (
 	White  = "\033[37m"
 )
 
-var StartupPage Page
+func NewInitPage() Page {
+	return Page{
+		Name: "Main Menu",
+		Items: []Item{
+			{
+				DisplayName: "Select Device",
+				ID:          "device",
+			},
+			{
+				DisplayName: "Others (To be supported)",
+				ID:          "nothing",
+			},
+		},
+	}
+}
 
 func (current *Page) HandleKeyMsg(keyMsg string) (tea.Cmd, *Page) {
 	switch keyMsg {
@@ -53,7 +67,8 @@ func (current *Page) HandleKeyMsg(keyMsg string) (tea.Cmd, *Page) {
 				Items: pageItems,
 			}
 		} else if current.Items[current.Cursor].ID == "main" {
-			return tea.ClearScreen, &StartupPage
+			initPage := NewInitPage()
+			return tea.ClearScreen, &initPage
 		} else if current.Items[current.Cursor].ID == "nothing" {
 			// TODO this is just to debug this API
 			spotify.GetPlayerStatus()
