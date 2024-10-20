@@ -1,4 +1,4 @@
-package pkg
+package view
 
 import (
 	"fmt"
@@ -17,8 +17,8 @@ const (
 	White  = "\033[37m"
 )
 
-func NewInitPage() Page {
-	return Page{
+func NewInitPage() *Page {
+	return &Page{
 		Name: "Main Menu",
 		Items: []Item{
 			{
@@ -41,7 +41,7 @@ func NewInitPage() Page {
 						ID:          "main",
 						OnEnter: func() (tea.Cmd, *Page) {
 							initPage := NewInitPage()
-							return tea.ClearScreen, &initPage
+							return tea.ClearScreen, initPage
 						},
 					})
 

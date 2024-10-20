@@ -18,3 +18,5 @@ app-build:
 
 clean:
 	$(RM) -rf bin/*
+test:
+	$(GO) test ./..

@@ -6,14 +6,9 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	// TODO refactor remove this main just invoke internal keep minimal in cmd
-	lib "spotify-terminal/internal/pkg"
 	spotify "spotify-terminal/internal/spotify"
+	lib "spotify-terminal/internal/view"
 )
-
-type model struct {
-	currentPage *lib.Page
-}
 
 func init() {
 	spotify.SpotifyKey = os.Getenv("SPOTIFY_KEY")
@@ -34,29 +29,8 @@ func init() {
 	spotify.Startup()
 }
 
-func (m model) Init() tea.Cmd {
-	return tea.ClearScreen
-}
-
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		cmd, nextPage := m.currentPage.HandleKeyMsg(msg.String())
-		if nextPage != nil {
-			m.currentPage = nextPage
-		}
-		return m, cmd
-	}
-	return m, nil
-}
-
-func (m model) View() string {
-	return m.currentPage.GetView()
-}
-
 func main() {
-	initPage := lib.NewInitPage()
-	p := tea.NewProgram(model{currentPage: &initPage})
+	p := tea.NewProgram(lib.NewCore())
 
 	_, err := p.Run()
 	if err != nil {

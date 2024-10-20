@@ -1,4 +1,4 @@
-package pkg
+package view
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
