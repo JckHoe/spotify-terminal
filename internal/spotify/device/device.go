@@ -1,4 +1,4 @@
-package api
+package device
 
 import (
 	"encoding/json"

@@ -12,6 +12,10 @@ func OnEnter(page *model.Page) {
 			DisplayName: "Select Device",
 			OnEnter:     DeviceOnEnter,
 		},
+		{
+			DisplayName: "Liked Songs",
+			OnEnter:     LikedOnEnter,
+		},
 	}
 }
 

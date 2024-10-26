@@ -5,7 +5,8 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"spotify-terminal/internal/spotify/api"
+	"spotify-terminal/internal/spotify/device"
+	"spotify-terminal/internal/spotify/song"
 )
 
 type Client struct {
@@ -20,8 +21,12 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) GetDevices() []api.Device {
-	return api.GetDevices(AccessToken, c.httpClient)
+func (c *Client) GetDevices() []device.Device {
+	return device.GetDevices(AccessToken, c.httpClient)
+}
+
+func (c *Client) GetLikedSong() song.SongResponse {
+	return song.GetLiked(AccessToken, c.httpClient)
 }
 
 func (c *Client) GetPlayerStatus() {
