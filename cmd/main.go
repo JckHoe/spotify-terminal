@@ -26,7 +26,6 @@ func init() {
 	if spotify.ClientId == "" {
 		log.Fatal("SPOTIFY_CLIENT_ID variable is not set")
 	}
-	spotify.Startup()
 }
 
 func main() {

@@ -8,21 +8,19 @@ import (
 	"net/http"
 )
 
-type DeviceResponse struct {
-	Devices []Device `json:"devices"`
+type Client struct {
+	httpClient *http.Client
 }
 
-type Device struct {
-	ID     string `json:"id"`
-	Active bool   `json:"is_active"`
-	Name   string `json:"name"`
-}
-
-func Startup() {
+func NewClient() *Client {
+	// TODO handle auth properly
 	refreshAccessToken()
+	return &Client{
+		httpClient: &http.Client{},
+	}
 }
 
-func GetDevices() []Device {
+func (c *Client) GetDevices() []Device {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player/devices", nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -30,12 +28,11 @@ func GetDevices() []Device {
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
 
-	client := &http.Client{}
-
-	resp, err := client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -51,7 +48,7 @@ func GetDevices() []Device {
 	return response.Devices
 }
 
-func GetPlayerStatus() {
+func (c *Client) GetPlayerStatus() {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player", nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -59,12 +56,11 @@ func GetPlayerStatus() {
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
 
-	client := &http.Client{}
-
-	resp, err := client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
