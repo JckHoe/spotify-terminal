@@ -10,7 +10,6 @@ func OnEnter(page *model.Page) {
 	page.Items = []model.Item{
 		{
 			DisplayName: "Select Device",
-			ID:          "device",
 			OnEnter:     DeviceOnEnter,
 		},
 	}
@@ -19,7 +18,6 @@ func OnEnter(page *model.Page) {
 func backItem() model.Item {
 	return model.Item{
 		DisplayName: "Back",
-		ID:          "back",
 		OnEnter:     OnEnter,
 	}
 }

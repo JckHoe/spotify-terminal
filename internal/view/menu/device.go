@@ -14,7 +14,6 @@ func DeviceOnEnter(page *model.Page) {
 	for _, device := range devices {
 		temp := model.Item{
 			DisplayName: device.Name,
-			ID:          device.ID,
 			Active:      device.Active,
 			OnEnter:     func(currentPage *model.Page) {},
 		}

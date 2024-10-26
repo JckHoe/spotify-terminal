@@ -25,7 +25,6 @@ type Page struct {
 
 type Item struct {
 	DisplayName string
-	ID          string
 	Active      bool
 	OnEnter     func(currentPage *Page)
 }
