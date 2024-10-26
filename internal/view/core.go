@@ -3,7 +3,7 @@ package view
 import (
 	"fmt"
 	"spotify-terminal/internal/spotify"
-	"spotify-terminal/internal/view/menu/device"
+	"spotify-terminal/internal/view/menu"
 	"spotify-terminal/internal/view/model"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,18 +14,12 @@ type Core struct {
 }
 
 func NewCore() *Core {
+	mainPage := &model.Page{
+		SClient: spotify.NewClient(),
+	}
+	menu.OnEnter(mainPage)
 	return &Core{
-		currentPage: &model.Page{
-			Name: "Main Menu",
-			Items: []model.Item{
-				{
-					DisplayName: "Select Device",
-					ID:          "device",
-					OnEnter:     device.OnEnter,
-				},
-			},
-			SClient: spotify.NewClient(),
-		},
+		currentPage: mainPage,
 	}
 }
 

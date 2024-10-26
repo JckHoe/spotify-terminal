@@ -1,10 +1,11 @@
-package device
+package menu
 
 import (
 	"spotify-terminal/internal/view/model"
 )
 
-func OnEnter(page *model.Page) {
+func DeviceOnEnter(page *model.Page) {
+	page.Cursor = 0
 	page.Name = "Main Menu"
 
 	devices := page.SClient.GetDevices()
@@ -14,10 +15,13 @@ func OnEnter(page *model.Page) {
 		temp := model.Item{
 			DisplayName: device.Name,
 			ID:          device.ID,
+			Active:      device.Active,
 			OnEnter:     func(currentPage *model.Page) {},
 		}
 		deviceList = append(deviceList, temp)
 	}
+
+	deviceList = append(deviceList, backItem())
 
 	page.Items = deviceList
 
