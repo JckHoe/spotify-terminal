@@ -1,11 +1,11 @@
 package spotify
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"spotify-terminal/internal/spotify/api"
 )
 
 type Client struct {
@@ -20,32 +20,8 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) GetDevices() []Device {
-	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player/devices", nil)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	var response DeviceResponse
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return response.Devices
+func (c *Client) GetDevices() []api.Device {
+	return api.GetDevices(AccessToken, c.httpClient)
 }
 
 func (c *Client) GetPlayerStatus() {
