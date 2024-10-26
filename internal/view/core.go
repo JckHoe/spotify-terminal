@@ -53,12 +53,18 @@ func (m Core) View() string {
 	s := fmt.Sprintf("%s\t\t\t%s\n\n", model.Red, m.currentPage.Name)
 	s += fmt.Sprintf("%s%s\n\n", model.Blue, "Select an option:")
 	for i, item := range m.currentPage.Items {
+		// Space out the sub menu item
+		if i == len(m.currentPage.Items)-m.currentPage.NoSubMenu {
+			s += "\n"
+		}
+
 		if i == m.currentPage.Cursor {
 			s += fmt.Sprintf("%s> %s\n", model.Green, getItemDisplay(item))
 		} else {
 			s += fmt.Sprintf("%s  %s\n", model.Yellow, getItemDisplay(item))
 		}
 	}
+
 	return s
 }
 

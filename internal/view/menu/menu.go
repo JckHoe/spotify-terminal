@@ -7,6 +7,7 @@ import (
 func OnEnter(page *model.Page) {
 	page.Cursor = 0
 	page.Name = "Main Menu"
+	page.NoSubMenu = 0
 	page.Items = []model.Item{
 		{
 			DisplayName: "Select Device",

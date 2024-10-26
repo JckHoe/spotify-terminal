@@ -21,6 +21,7 @@ func DeviceOnEnter(page *model.Page) {
 	}
 
 	deviceList = append(deviceList, backItem())
+	page.NoSubMenu = 1
 
 	page.Items = deviceList
 

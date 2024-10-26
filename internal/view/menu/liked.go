@@ -7,6 +7,7 @@ import (
 func LikedOnEnter(page *model.Page) {
 	page.Cursor = 0
 	page.Name = "Liked Songs"
+	page.NoSubMenu = 1
 
 	songs := page.SClient.GetLikedSong()
 

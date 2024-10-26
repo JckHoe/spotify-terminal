@@ -21,6 +21,8 @@ type Page struct {
 	Items   []Item
 	Cursor  int
 	SClient *spotify.Client
+
+	NoSubMenu int
 }
 
 type Item struct {
