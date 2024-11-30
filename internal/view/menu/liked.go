@@ -15,7 +15,9 @@ func LikedOnEnter(page *model.Page) {
 	for _, song := range songs.Items {
 		temp := model.Item{
 			DisplayName: song.Track.Name,
-			OnEnter:     func(currentPage *model.Page) {},
+			OnEnter: func(currentPage *model.Page) {
+				currentPage.SClient.PlaySelectedSong(song.Track.Uri)
+			},
 		}
 		songList = append(songList, temp)
 	}

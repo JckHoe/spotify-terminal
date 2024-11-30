@@ -29,6 +29,13 @@ func (c *Client) GetLikedSong() song.SongResponse {
 	return song.GetLiked(AccessToken, c.httpClient)
 }
 
+func (c *Client) PlaySelectedSong(track string) error {
+	request := song.SongPlayRequest{
+		Uris: []string{track},
+	}
+	return song.Play(AccessToken, c.httpClient, request)
+}
+
 func (c *Client) GetPlayerStatus() {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player", nil)
 	if err != nil {
