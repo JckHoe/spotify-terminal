@@ -1,4 +1,4 @@
-package song
+package spotify
 
 import (
 	"bytes"
@@ -26,15 +26,15 @@ type Track struct {
 	Uri  string `json:"uri"`
 }
 
-func GetLiked(token string, httpClient *http.Client) SongResponse {
-	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/tracks", nil)
+func (c *Client) GetLiked() SongResponse {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/me/tracks", c.baseUrl), nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
 
-	resp, err := httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -52,33 +52,38 @@ func GetLiked(token string, httpClient *http.Client) SongResponse {
 	}
 
 	return response
-
 }
 
-func Play(token string, httpClient *http.Client, request SongPlayRequest) error {
+func (c *Client) PlaySelectedSong(track, deviceId string) error {
+	request := SongPlayRequest{
+		Uris: []string{track},
+	}
 	reqBody, err := json.Marshal(request)
 	if err != nil {
 		log.Fatalln(err)
 		return err
 	}
-	req, err := http.NewRequest("PUT", "https://api.spotify.com/v1/me/player/play", bytes.NewBuffer(reqBody))
+
+	resourcePath := "/me/player/play"
+	if deviceId != "" {
+		resourcePath = resourcePath + fmt.Sprintf("?device_id=%s", deviceId)
+	}
+
+	req, err := http.NewRequest("PUT", c.baseUrl+resourcePath, bytes.NewBuffer(reqBody))
 	if err != nil {
 		log.Fatalln(err)
 		return err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 		return err
 	}
 	defer resp.Body.Close()
-
-	// if resp.Status != "200 OK" {
-	// }
 
 	return nil
 }

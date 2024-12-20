@@ -1,4 +1,4 @@
-package device
+package spotify
 
 import (
 	"encoding/json"
@@ -18,15 +18,15 @@ type Device struct {
 	Name   string `json:"name"`
 }
 
-func GetDevices(token string, httpClient *http.Client) []Device {
-	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player/devices", nil)
+func (c *Client) GetDevices() []Device {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/me/player/devices", c.baseUrl), nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
 
-	resp, err := httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}

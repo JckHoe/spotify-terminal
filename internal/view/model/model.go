@@ -15,18 +15,18 @@ const (
 	White  = "\033[37m"
 )
 
-type Page struct {
-	Name string
-
-	Items   []Item
-	Cursor  int
-	SClient *spotify.Client
-
+type PageState struct {
+	Name      string
+	Items     []Item
+	Cursor    int
 	NoSubMenu int
+
+	CurrentDeviceId string
+	SClient         *spotify.Client
 }
 
 type Item struct {
 	DisplayName string
 	Active      bool
-	OnEnter     func(currentPage *Page)
+	OnEnter     func(currentPage *PageState)
 }

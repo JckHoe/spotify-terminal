@@ -4,7 +4,7 @@ import (
 	"spotify-terminal/internal/view/model"
 )
 
-func OnEnter(page *model.Page) {
+func OnEnter(page *model.PageState) {
 	page.Cursor = 0
 	page.Name = "Main Menu"
 	page.NoSubMenu = 0

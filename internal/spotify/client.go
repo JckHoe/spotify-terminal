@@ -5,36 +5,25 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"spotify-terminal/internal/spotify/device"
-	"spotify-terminal/internal/spotify/song"
 )
 
 type Client struct {
 	httpClient *http.Client
+	token      string
+	baseUrl    string
 }
 
-func NewClient() *Client {
+func NewClient(baseUrl string) *Client {
 	// TODO handle auth properly
 	refreshAccessToken()
 	return &Client{
 		httpClient: &http.Client{},
+		token:      AccessToken,
+		baseUrl:    baseUrl,
 	}
 }
 
-func (c *Client) GetDevices() []device.Device {
-	return device.GetDevices(AccessToken, c.httpClient)
-}
-
-func (c *Client) GetLikedSong() song.SongResponse {
-	return song.GetLiked(AccessToken, c.httpClient)
-}
-
-func (c *Client) PlaySelectedSong(track string) error {
-	request := song.SongPlayRequest{
-		Uris: []string{track},
-	}
-	return song.Play(AccessToken, c.httpClient, request)
-}
+// TODO define interface
 
 func (c *Client) GetPlayerStatus() {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player", nil)

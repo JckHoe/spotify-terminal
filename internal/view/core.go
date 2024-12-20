@@ -10,12 +10,12 @@ import (
 )
 
 type Core struct {
-	currentPage *model.Page
+	currentPage *model.PageState
 }
 
 func NewCore() *Core {
-	mainPage := &model.Page{
-		SClient: spotify.NewClient(),
+	mainPage := &model.PageState{
+		SClient: spotify.NewClient("https://api.spotify.com/v1"),
 	}
 	menu.OnEnter(mainPage)
 	return &Core{
