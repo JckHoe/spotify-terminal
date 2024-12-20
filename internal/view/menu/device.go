@@ -4,7 +4,7 @@ import (
 	"spotify-terminal/internal/view/model"
 )
 
-func DeviceOnEnter(page *model.Page) {
+func DeviceOnEnter(page *model.PageState) {
 	page.Cursor = 0
 	page.Name = "Main Menu"
 
@@ -15,7 +15,9 @@ func DeviceOnEnter(page *model.Page) {
 		temp := model.Item{
 			DisplayName: device.Name,
 			Active:      device.Active,
-			OnEnter:     func(currentPage *model.Page) {},
+			OnEnter: func(currentPage *model.PageState) {
+				currentPage.CurrentDeviceId = device.ID
+			},
 		}
 		deviceList = append(deviceList, temp)
 	}
