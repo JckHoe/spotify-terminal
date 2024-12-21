@@ -9,7 +9,7 @@ on:
         default: 'v0.1.0'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,8 +29,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release and Upload Binary
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.event.inputs.version }}
-          files: bin/app
+      - name: Create GitHub release and upload binary
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          
+          # Create the release using the GitHub API
+          RELEASE_URL=$(curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"tag_name": "'"$VERSION"'","name": "'"$VERSION"'","body": "Release for version '"$VERSION"'"}' \
+            https://api.github.com/repos/${{ github.repository }}/releases)
+          
+          UPLOAD_URL=$(echo $RELEASE_URL | jq -r .upload_url | sed -e 's/{?name,label}//')
+
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @bin/app \
+            "${UPLOAD_URL}?name=spotify-terminal-x86-linux-${VERSION}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
