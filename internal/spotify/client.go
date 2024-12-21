@@ -25,6 +25,21 @@ func NewClient(baseUrl string) *Client {
 
 // TODO define interface
 
+func (c *Client) PausePlayer() {
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/me/player/pause", c.baseUrl), nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", AccessToken))
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+}
+
 func (c *Client) GetPlayerStatus() {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/player", nil)
 	if err != nil {
