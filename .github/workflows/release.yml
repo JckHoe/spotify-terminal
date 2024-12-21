@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version of the release'
+        required: true
+        default: 'v0.1.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: make
+
+      - name: Create Git tag
+        id: create_tag
+        run: |
+          echo "Creating tag ${GITHUB_EVENT_INPUTS_version}"
+          git tag "${{ github.event.inputs.version }}"
+          git push origin "${{ github.event.inputs.version }}"
+
+      - name: Create Release and Upload Binary
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.event.inputs.version }}
+          files: bin/app
