@@ -22,8 +22,12 @@ jobs:
         id: create_tag
         run: |
           echo "Creating tag ${GITHUB_EVENT_INPUTS_version}"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git tag "${{ github.event.inputs.version }}"
           git push origin "${{ github.event.inputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release and Upload Binary
         uses: ncipollo/release-action@v1
