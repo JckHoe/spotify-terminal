@@ -23,6 +23,9 @@ type PageState struct {
 
 	CurrentDeviceId string
 	SClient         *spotify.Client
+
+	// TODO refactor this handling
+	FetchUrl string
 }
 
 type Item struct {

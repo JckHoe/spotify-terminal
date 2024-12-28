@@ -14,7 +14,9 @@ type SongPlayRequest struct {
 }
 
 type SongResponse struct {
-	Items []SongItem `json:"items"`
+	Items    []SongItem `json:"items"`
+	Previous string     `json:"previous"`
+	Next     string     `json:"next"`
 }
 
 type SongItem struct {
@@ -28,6 +30,34 @@ type Track struct {
 
 func (c *Client) GetLiked() SongResponse {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/me/tracks", c.baseUrl), nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var response SongResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return response
+}
+
+func (c *Client) GetLikedWithUrl(requestUrl string) SongResponse {
+	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
