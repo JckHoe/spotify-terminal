@@ -5,6 +5,7 @@ import (
 )
 
 const (
+	// Text colors
 	Reset  = "\033[0m"
 	Red    = "\033[31m"
 	Green  = "\033[32m"
@@ -13,6 +14,18 @@ const (
 	Purple = "\033[35m"
 	Cyan   = "\033[36m"
 	White  = "\033[37m"
+
+	// Borders
+	CurveTopLeft   = "╭"
+	CurveTopRight  = "╮"
+	Verticle       = "│"
+	Horizontal     = "─"
+	CurveBtmLeft   = "╰"
+	CurveBtmRight  = "╯"
+	SharpLeftDown  = "┐"
+	SharpRightDown = "┌"
+	SharpLeftUp    = "┘"
+	SharpRightUp   = "└"
 )
 
 type PageState struct {

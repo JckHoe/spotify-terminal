@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"log"
 	"spotify-terminal/internal/spotify"
 	"spotify-terminal/internal/view/menu"
 	"spotify-terminal/internal/view/model"
@@ -50,7 +51,13 @@ func (m Core) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Core) View() string {
-	s := fmt.Sprintf("%s\t\t\t%s\n\n", model.Red, m.currentPage.Name)
+	// TODO dynamic check border lengths
+	maxHorizontalLength := 100
+	s, err := renderTitle(fmt.Sprintf("%s%s", model.Red, m.currentPage.Name), uint(maxHorizontalLength))
+	if err != nil {
+		log.Fatalf("Failed to render Title %v", err)
+		return ""
+	}
 	s += fmt.Sprintf("%s%s\n\n", model.Blue, "Select an option:")
 	for i, item := range m.currentPage.Items {
 		if i == len(m.currentPage.Items)-m.currentPage.NoSubMenu {
