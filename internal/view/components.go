@@ -4,20 +4,27 @@ import (
 	"fmt"
 	"spotify-terminal/internal/view/model"
 	"strings"
+
+	"github.com/mattn/go-runewidth"
 )
 
-func renderTitle(title string, maxLength uint) (string, error) {
-	// Variables
-	titleLen := len(title)
+// Caching constant conponents
+var emptyRow string
+var footerRow string
+
+func renderTitle(builder *strings.Builder, title string, maxLength uint) error {
+	titleLen := getStringWidth(title)
 	reservedLength := 4
 	remainingSpace := maxLength - uint(reservedLength)
-	var titleBuilder strings.Builder
 	var paddingLeft uint
 	var paddingRight uint
 
 	// Validation
 	if titleLen >= int(remainingSpace) {
-		return "", fmt.Errorf("Title length of %d is too long for the maxlength", titleLen)
+		return fmt.Errorf("Title length of %d is too long for the maxlength", titleLen)
+	}
+	if builder == nil {
+		return fmt.Errorf("Builder is nil")
 	}
 
 	// Calculate padding
@@ -29,25 +36,97 @@ func renderTitle(title string, maxLength uint) (string, error) {
 	}
 
 	// render title
-	titleBuilder.WriteString(model.Yellow)
-	titleBuilder.WriteString(model.CurveTopLeft)
-	err := padBuilderWith(&titleBuilder, paddingLeft, model.Horizontal)
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.CurveTopLeft)
+	err := padBuilderWith(builder, paddingLeft, model.Horizontal)
 	if err != nil {
-		return "", err
+		return err
 	}
-	titleBuilder.WriteString(model.SharpLeftDown)
-	titleBuilder.WriteString(title)
-	titleBuilder.WriteString(model.Yellow)
-	titleBuilder.WriteString(model.SharpRightDown)
-	err = padBuilderWith(&titleBuilder, paddingRight, model.Horizontal)
+	builder.WriteString(model.SharpLeftDown)
+	builder.WriteString(model.Red)
+	builder.WriteString(title)
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.SharpRightDown)
+	err = padBuilderWith(builder, paddingRight, model.Horizontal)
 	if err != nil {
-		return "", err
+		return err
 	}
-	titleBuilder.WriteString(model.CurveTopRight)
-	titleBuilder.WriteByte('\n')
-	titleBuilder.WriteByte('\n')
+	builder.WriteString(model.CurveTopRight)
+	builder.WriteByte('\n')
 
-	return titleBuilder.String(), nil
+	return nil
+}
+
+func renderItem(builder *strings.Builder, rowContent string, maxLength uint, selected bool) error {
+	contentLen := getStringWidth(rowContent)
+	reservedLength := 3
+	remainingSpace := maxLength - uint(reservedLength)
+
+	// Validation
+	if contentLen >= int(remainingSpace) {
+		return fmt.Errorf("Content length of %d is too long for the maxlength", contentLen)
+	}
+
+	paddingRight := remainingSpace - uint(contentLen)
+
+	// Render item row
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.Verticle)
+	builder.WriteByte(' ')
+	if selected {
+		builder.WriteString(model.Green)
+	}
+	builder.WriteString(rowContent)
+	err := padBuilderWith(builder, paddingRight, " ")
+	if err != nil {
+		return err
+	}
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.Verticle)
+	builder.WriteByte('\n')
+
+	return nil
+}
+
+func renderEmptyRow(builder *strings.Builder, maxLength uint) error {
+	if emptyRow != "" {
+		builder.WriteString(emptyRow)
+		return nil
+	}
+
+	reservedLength := 2
+	remainingSpace := maxLength - uint(reservedLength)
+
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.Verticle)
+	err := padBuilderWith(builder, remainingSpace, " ")
+	if err != nil {
+		return err
+	}
+	builder.WriteString(model.Verticle)
+	builder.WriteByte('\n')
+
+	return nil
+}
+
+func renderFooter(builder *strings.Builder, maxLength uint) error {
+	if footerRow != "" {
+		builder.WriteString(footerRow)
+		return nil
+	}
+
+	reservedLength := 2
+	remainingSpace := maxLength - uint(reservedLength)
+
+	builder.WriteString(model.Yellow)
+	builder.WriteString(model.CurveBtmLeft)
+	err := padBuilderWith(builder, remainingSpace, model.Horizontal)
+	if err != nil {
+		return err
+	}
+	builder.WriteString(model.CurveBtmRight)
+
+	return nil
 }
 
 func padBuilderWith(builder *strings.Builder, length uint, padding string) error {
@@ -64,4 +143,12 @@ func padBuilderWith(builder *strings.Builder, length uint, padding string) error
 	}
 
 	return nil
+}
+
+func getStringWidth(s string) int {
+	width := 0
+	for _, r := range s {
+		width += runewidth.StringWidth(string(r))
+	}
+	return width
 }

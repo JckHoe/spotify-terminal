@@ -10,7 +10,9 @@ require (
 	github.com/charmbracelet/x/ansi v0.2.3 // indirect
 	github.com/charmbracelet/x/term v0.2.0 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
+	github.com/klauspost/cpuid/v2 v2.0.3 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
+	github.com/matrixorigin/simdcsv v0.0.0-20230210060146-09b8e45209dd // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect

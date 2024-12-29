@@ -6,6 +6,7 @@ import (
 	"spotify-terminal/internal/spotify"
 	"spotify-terminal/internal/view/menu"
 	"spotify-terminal/internal/view/model"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -53,25 +54,40 @@ func (m Core) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Core) View() string {
 	// TODO dynamic check border lengths
 	maxHorizontalLength := 100
-	s, err := renderTitle(fmt.Sprintf("%s%s", model.Red, m.currentPage.Name), uint(maxHorizontalLength))
-	if err != nil {
+	var viewBuilder strings.Builder
+
+	if err := renderTitle(&viewBuilder, m.currentPage.Name, uint(maxHorizontalLength)); err != nil {
 		log.Fatalf("Failed to render Title %v", err)
 		return ""
 	}
-	s += fmt.Sprintf("%s%s\n\n", model.Blue, "Select an option:")
+
 	for i, item := range m.currentPage.Items {
 		if i == len(m.currentPage.Items)-m.currentPage.NoSubMenu {
-			s += "\n"
+			if err := renderEmptyRow(&viewBuilder, uint(maxHorizontalLength)); err != nil {
+				log.Fatalln(err)
+				return ""
+			}
 		}
 
 		if i == m.currentPage.Cursor {
-			s += fmt.Sprintf("%s> %s\n", model.Green, getItemDisplay(item))
+			if err := renderItem(&viewBuilder, fmt.Sprintf("> %s", getItemDisplay(item)), uint(maxHorizontalLength), true); err != nil {
+				log.Fatalln(err)
+				return ""
+			}
 		} else {
-			s += fmt.Sprintf("%s  %s\n", model.Yellow, getItemDisplay(item))
+			if err := renderItem(&viewBuilder, fmt.Sprintf("  %s", getItemDisplay(item)), uint(maxHorizontalLength), false); err != nil {
+				log.Fatalln(err)
+				return ""
+			}
 		}
 	}
 
-	return s
+	if err := renderFooter(&viewBuilder, uint(maxHorizontalLength)); err != nil {
+		log.Fatalln(err)
+		return ""
+	}
+
+	return viewBuilder.String()
 }
 
 func getItemDisplay(input model.Item) string {
