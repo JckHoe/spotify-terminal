@@ -29,6 +29,7 @@ func renderTitle(title string, maxLength uint) (string, error) {
 	}
 
 	// render title
+	titleBuilder.WriteString(model.Yellow)
 	titleBuilder.WriteString(model.CurveTopLeft)
 	err := padBuilderWith(&titleBuilder, paddingLeft, model.Horizontal)
 	if err != nil {
@@ -36,6 +37,7 @@ func renderTitle(title string, maxLength uint) (string, error) {
 	}
 	titleBuilder.WriteString(model.SharpLeftDown)
 	titleBuilder.WriteString(title)
+	titleBuilder.WriteString(model.Yellow)
 	titleBuilder.WriteString(model.SharpRightDown)
 	err = padBuilderWith(&titleBuilder, paddingRight, model.Horizontal)
 	if err != nil {
