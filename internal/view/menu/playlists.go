@@ -5,49 +5,48 @@ import (
 	"spotify-terminal/internal/view/model"
 )
 
-func LikedOnEnter(page *model.PageState) {
+func MyPlayListOnEnter(page *model.PageState) {
 	page.Cursor = 0
-	page.Name = "Liked Songs"
+	page.Name = "Playlists"
 	page.NoSubMenu = 1
 
-	var songs spotify.SongResponse
+	var playlists spotify.PlaylistResponse
 	if page.FetchUrl != "" {
-		songs = page.SClient.GetLikedWithUrl(page.FetchUrl)
+		playlists = page.SClient.GetPlaylistWithUrl(page.FetchUrl)
 	} else {
-		songs = page.SClient.GetLiked()
+		playlists = page.SClient.GetPlaylist()
 	}
 
 	var items []model.Item
-	for _, song := range songs.Items {
-		songItem := model.Item{
-			DisplayName: song.Track.Name,
+	for _, playlist := range playlists.Items {
+		playlistItem := model.Item{
+			DisplayName: playlist.Name,
 			OnEnter: func(currentPage *model.PageState) {
-				currentPage.SClient.PlaySelectedSong(song.Track.Uri, currentPage.CurrentDeviceId)
+				// TODO load playlist tracks from ID
 			},
 		}
-		items = append(items, songItem)
+		items = append(items, playlistItem)
 	}
 
-	if songs.Previous != "" {
+	if playlists.Previous != "" {
 		page.NoSubMenu++
 		prevItem := model.Item{
 			DisplayName: "Previous",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Previous
-				LikedOnEnter(page)
+				page.FetchUrl = playlists.Previous
+				MyPlayListOnEnter(page)
 			},
 		}
 		items = append(items, prevItem)
 	}
 
-	if songs.Next != "" {
+	if playlists.Next != "" {
 		page.NoSubMenu++
 		nextItem := model.Item{
 			DisplayName: "Next",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Next
-				LikedOnEnter(page)
-
+				page.FetchUrl = playlists.Next
+				MyPlayListOnEnter(page)
 			},
 		}
 		items = append(items, nextItem)

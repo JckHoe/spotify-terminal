@@ -18,6 +18,10 @@ func OnEnter(page *model.PageState) {
 			OnEnter:     LikedOnEnter,
 		},
 		{
+			DisplayName: "My Playlist",
+			OnEnter:     MyPlayListOnEnter,
+		},
+		{
 			DisplayName: "Pause Player",
 			OnEnter: func(currentPage *model.PageState) {
 				currentPage.SClient.PausePlayer()
