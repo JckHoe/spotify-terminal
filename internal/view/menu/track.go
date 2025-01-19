@@ -5,18 +5,14 @@ import (
 	"spotify-terminal/internal/view/model"
 )
 
-func LikedOnEnter(page *model.PageState) {
+func PlaylistTracksOnEnter(page *model.PageState) {
 	page.Cursor = 0
-	page.Name = "Liked Songs"
 	page.NoSubMenu = 1
 
 	var songs spotify.SongResponse
 	if page.FetchUrl != "" {
 		songs = page.SClient.GetTracksWithUrl(page.FetchUrl)
-	} else {
-		songs = page.SClient.GetLiked()
 	}
-
 	var items []model.Item
 	for _, song := range songs.Items {
 		songItem := model.Item{
@@ -34,7 +30,7 @@ func LikedOnEnter(page *model.PageState) {
 			DisplayName: "Previous",
 			OnEnter: func(currentPage *model.PageState) {
 				page.FetchUrl = songs.Previous
-				LikedOnEnter(page)
+				PlaylistTracksOnEnter(page)
 			},
 		}
 		items = append(items, prevItem)
@@ -46,8 +42,7 @@ func LikedOnEnter(page *model.PageState) {
 			DisplayName: "Next",
 			OnEnter: func(currentPage *model.PageState) {
 				page.FetchUrl = songs.Next
-				LikedOnEnter(page)
-
+				PlaylistTracksOnEnter(page)
 			},
 		}
 		items = append(items, nextItem)

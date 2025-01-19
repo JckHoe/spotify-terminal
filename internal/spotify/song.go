@@ -56,7 +56,7 @@ func (c *Client) GetLiked() SongResponse {
 	return response
 }
 
-func (c *Client) GetLikedWithUrl(requestUrl string) SongResponse {
+func (c *Client) GetTracksWithUrl(requestUrl string) SongResponse {
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		log.Fatalln(err)

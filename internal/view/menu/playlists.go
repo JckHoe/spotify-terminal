@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"fmt"
 	"spotify-terminal/internal/spotify"
 	"spotify-terminal/internal/view/model"
 )
@@ -22,7 +23,9 @@ func MyPlayListOnEnter(page *model.PageState) {
 		playlistItem := model.Item{
 			DisplayName: playlist.Name,
 			OnEnter: func(currentPage *model.PageState) {
-				// TODO load playlist tracks from ID
+				page.Name = playlist.Name
+				page.FetchUrl = fmt.Sprintf("https://api.spotify.com/v1/playlists/%s/tracks?limit=20", playlist.ID)
+				PlaylistTracksOnEnter(page)
 			},
 		}
 		items = append(items, playlistItem)
