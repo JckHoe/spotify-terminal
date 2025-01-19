@@ -33,8 +33,8 @@ func LikedOnEnter(page *model.PageState) {
 		prevItem := model.Item{
 			DisplayName: "Previous",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Previous
-				LikedOnEnter(page)
+				currentPage.FetchUrl = songs.Previous
+				LikedOnEnter(currentPage)
 			},
 		}
 		items = append(items, prevItem)
@@ -45,8 +45,8 @@ func LikedOnEnter(page *model.PageState) {
 		nextItem := model.Item{
 			DisplayName: "Next",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Next
-				LikedOnEnter(page)
+				currentPage.FetchUrl = songs.Next
+				LikedOnEnter(currentPage)
 
 			},
 		}
