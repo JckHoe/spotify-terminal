@@ -29,8 +29,8 @@ func PlaylistTracksOnEnter(page *model.PageState) {
 		prevItem := model.Item{
 			DisplayName: "Previous",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Previous
-				PlaylistTracksOnEnter(page)
+				currentPage.FetchUrl = songs.Previous
+				PlaylistTracksOnEnter(currentPage)
 			},
 		}
 		items = append(items, prevItem)
@@ -41,8 +41,8 @@ func PlaylistTracksOnEnter(page *model.PageState) {
 		nextItem := model.Item{
 			DisplayName: "Next",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = songs.Next
-				PlaylistTracksOnEnter(page)
+				currentPage.FetchUrl = songs.Next
+				PlaylistTracksOnEnter(currentPage)
 			},
 		}
 		items = append(items, nextItem)

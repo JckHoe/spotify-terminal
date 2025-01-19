@@ -8,6 +8,7 @@ func OnEnter(page *model.PageState) {
 	page.Cursor = 0
 	page.Name = "Main Menu"
 	page.NoSubMenu = 0
+	page.FetchUrl = ""
 	page.Items = []model.Item{
 		{
 			DisplayName: "Select Device",

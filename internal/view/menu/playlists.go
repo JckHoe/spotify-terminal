@@ -23,9 +23,9 @@ func MyPlayListOnEnter(page *model.PageState) {
 		playlistItem := model.Item{
 			DisplayName: playlist.Name,
 			OnEnter: func(currentPage *model.PageState) {
-				page.Name = playlist.Name
-				page.FetchUrl = fmt.Sprintf("https://api.spotify.com/v1/playlists/%s/tracks?limit=20", playlist.ID)
-				PlaylistTracksOnEnter(page)
+				currentPage.Name = playlist.Name
+				currentPage.FetchUrl = fmt.Sprintf("https://api.spotify.com/v1/playlists/%s/tracks?limit=20", playlist.ID)
+				PlaylistTracksOnEnter(currentPage)
 			},
 		}
 		items = append(items, playlistItem)
@@ -36,8 +36,8 @@ func MyPlayListOnEnter(page *model.PageState) {
 		prevItem := model.Item{
 			DisplayName: "Previous",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = playlists.Previous
-				MyPlayListOnEnter(page)
+				currentPage.FetchUrl = playlists.Previous
+				MyPlayListOnEnter(currentPage)
 			},
 		}
 		items = append(items, prevItem)
@@ -48,8 +48,8 @@ func MyPlayListOnEnter(page *model.PageState) {
 		nextItem := model.Item{
 			DisplayName: "Next",
 			OnEnter: func(currentPage *model.PageState) {
-				page.FetchUrl = playlists.Next
-				MyPlayListOnEnter(page)
+				currentPage.FetchUrl = playlists.Next
+				MyPlayListOnEnter(currentPage)
 			},
 		}
 		items = append(items, nextItem)
